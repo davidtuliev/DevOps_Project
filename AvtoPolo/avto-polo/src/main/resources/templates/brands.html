@@ -1,0 +1,29 @@
+<div xmlns:th="http://www.thymeleaf.org">
+    <section class="jumbotron text-center bg-success">
+        <div class="container">
+            <h3 class="jumbotron-heading" style="color: white">All brands</h3>
+        </div>
+    </section>
+    <div class="container mb-4">
+        <div class="row">
+            <div class="col-12" th:if="${brands.size() > 0}">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <tbody>
+                        <tr th:each="br : ${brands}" class="brands">
+                            <td><img src="" th:src="${br.ImageUrl}" width="150" alt=""></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <a href="/brands/add-brand" class="btn btn-block btn-success add--btn">
+            Add brand
+        </a>
+    </div>
+
+</div>

@@ -1,0 +1,61 @@
+<th:block xmlns:th="http://www.thymeleaf.org">
+    <section class="jumbotron text-center bg-success">
+        <div class="container">
+            <h3 class="jumbotron-heading" style="color: white">
+                Here is your shopping cart,
+                @<th:block th:if="${#request.getRemoteUser() != null}" th:text="${#request.getRemoteUser()}"></th:block>
+            </h3>
+        </div>
+    </section>
+
+    <div th:if="${hasError}">
+        <h5 class="text-center text-danger" th:text="${error}"></h5>
+    </div>
+
+    <div class="container mb-4">
+        <div class="row">
+            <div class="col-12" th:if="${automobiles.size() > 0}">
+                <div class="table-responsive">
+                    <table>
+                        <tbody>
+                        <tr th:each="auto : ${automobiles}" class="auto" style="display: inline-block">
+                            <td class="card" style="width: 18rem; ">
+                                <img class="card-img-top" src="..." style="width: 200px; height: 150px"
+                                     alt="Card image cap" th:src="${auto.getImageUrl()}">
+                                <div class="card-body">
+                                    <h5 class="card-title" th:text="${auto.getName()}">Card title</h5>
+                                    <p class="card-text" style="display: inline-block">Price: </p>
+                                    <p class="card-text" style="display: inline-block" th:text="${auto.getPrice()}"></p>
+                                    <p class="card-text" style="display: inline-block">$</p>
+                                    <br>
+                                    <p class="card-text" style="display: inline-block">Location: </p>
+                                    <p class="card-text" style="display: inline-block"
+                                       th:text="${auto.getSellingLocation()}"></p>
+                                    <br>
+                                    <p class="card-text" style="display: inline-block">Type: </p>
+                                    <p class="card-text" style="display: inline-block" th:text="${auto.getType() != null}
+                                         ?  ${auto.getType().getName()} : 'No Type'"></p>
+                                    <br>
+                                    <p class="card-text" style="display: inline-block">Brand: </p>
+                                    <p class="card-text" style="display: inline-block" th:text="${auto.getBrand() != null}
+                                         ?  ${auto.getBrand().getName()} : 'No Brand'"></p>
+                                    <br>
+                                    <div style="display: inline-block">
+                                        <form th:action="@{'/shopping-cart/delete/{id}' (id=${auto.getId()})}"
+                                              th:method="DELETE">
+                                            <button type="submit"
+                                                    class="btn btn-sm btn-danger delete-product">
+                                                <i class="fa fa-trash">Remove from cart</i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</th:block>

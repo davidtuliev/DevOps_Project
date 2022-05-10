@@ -1,0 +1,176 @@
+<th:block xmlns:th="http://www.thymeleaf.org">
+    <section class="jumbotron text-center bg-success">
+        <div class="container">
+            <h3 class="jumbotron-heading " style="color: white">All automobiles</h3>
+        </div>
+    </section>
+    <style>
+        [type=radio] + img {
+            cursor: pointer;
+        }
+
+        [type=radio]:checked + img {
+            outline: 2px solid mediumseagreen;
+        }
+    </style>
+
+    <div class="container" style="display: inline-block">
+        <form id="filter-form1">
+            <ul id="brandId" style="list-style-type:none; display: inline-block">
+                <li style="display: inline-block">
+                    <button class="btn btn-success" id="filter1" type="submit">Filter by brands</button>
+                </li>
+                <li style="display: inline-block">
+                    <label th:each="br : ${brands}">
+                        <input type="radio" style="visibility: hidden" name="brandId" th:value="${br.id}">
+                        <img src="" th:src="${br.ImageUrl}" width="50" data-toggle="tooltip" data-placement="top"
+                             th:title="${br.name}">
+                    </label>
+                </li>
+            </ul>
+        </form>
+        <form id="filter-form2">
+            <ul id="typeId" style="list-style-type:none; display: inline-block">
+                <li style="display: inline-block">
+                    <button class="btn btn-success" id="filter2" type="submit">Filter by types</button>
+                    <br>
+                </li>
+                <li style="display: inline-block">
+                    <label th:each="ty : ${types}">
+                        <input type="radio" style="visibility: hidden" name="typeId" th:value="${ty.id}">
+                        <img src="" th:src="${ty.ImageUrl}" width="50" data-toggle="tooltip" data-placement="top"
+                             th:title="${ty.name}">
+                    </label>
+                </li>
+            </ul>
+        </form>
+    </div>
+
+
+    <div class="container mb-4">
+        <div th:if="${totalPages > 1}">
+            <div class="row col-sm-10">
+                <div class="col-sm-1">
+                    <a th:if="${currentPage > 1}" th:href="@{'/automobiles/page/' + ${currentPage - 1}}">Prev</a>
+                    <span th:unless="${currentPage > 1}">Prev</span>
+                </div>
+                <div class="col-sm-1">
+					<span th:each="i: ${#numbers.sequence(1, totalPages)}">
+						<a th:if="${currentPage != i}" th:href="@{'/automobiles/page/' + ${i}}">[[${i}]]</a>
+						<span th:unless="${currentPage != i}">[[${i}]]</span>  &nbsp; &nbsp;
+					</span>
+                </div>
+                <div class="col-sm-1">
+                    <a th:if="${currentPage < totalPages}" th:href="@{'/automobiles/page/' + ${currentPage + 1}}">
+                        Next</a>
+                    <span th:unless="${currentPage < totalPages}">Next</span>
+                </div>
+
+                <div class="col-sm-1">
+                    <a th:if="${currentPage < totalPages}" th:href="@{'/automobiles/page/' + ${totalPages}}">
+                    Last</a>
+                    <span th:unless="${currentPage < totalPages}">Last</span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12" th:if="${automobiles.size() > 0}">
+                <div class="table-responsive">
+                    <table>
+                        <tbody>
+                        <tr th:each="auto : ${automobiles}" class="auto" style="display: inline-block">
+                            <td class="card" style="width: 18rem; ">
+                                <img class="card-img-top" src="..." style="width: 200px; height: 150px"
+                                     alt="Card image cap"
+                                     th:src="${auto.getImageUrl()}">
+                                <div class="card-body">
+                                    <h5 class="card-title" th:text="${auto.getName()}">Card title</h5>
+                                    <p class="card-text" style="display: inline-block">Price: </p>
+                                    <p class="card-text" style="display: inline-block" th:text="${auto.getPrice()}"></p>
+                                    <p class="card-text" style="display: inline-block">$</p>
+                                    <br>
+                                    <p class="card-text" style="display: inline-block">Location: </p>
+                                    <p class="card-text" style="display: inline-block"
+                                       th:text="${auto.getSellingLocation()}"></p>
+                                    <br>
+                                    <p class="card-text" style="display: inline-block">Type: </p>
+                                    <p class="card-text" style="display: inline-block" th:text="${auto.getType() != null}
+                                         ?  ${auto.getType().getName()} : 'No Type'"></p>
+                                    <br>
+                                    <p class="card-text" style="display: inline-block">Brand: </p>
+                                    <p class="card-text" style="display: inline-block"
+                                       th:text=" ${auto.getBrand().getName()}"></p>
+                                    <br>
+                                    <div style="display: inline-block">
+                                        <form th:action="@{'/automobiles/delete/{id}' (id=${auto.getId()})}"
+                                              th:method="DELETE">
+                                            <button type="submit"
+                                                    sec:authorize="hasRole('ROLE_ADMIN')"
+                                                    class="btn btn-sm btn-danger delete-product">
+                                                <i class="fa fa-trash">Delete</i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                    <div style="display: inline-block">
+                                        <a th:href="@{'/automobiles/edit-car/{id}' (id=${auto.getId()})}"
+                                           sec:authorize="hasRole('ROLE_ADMIN')"
+                                           class="btn btn-sm btn-info edit-product">
+                                            <i class="fa fa-trash">Edit</i>
+                                        </a>
+                                    </div>
+                                    <div style="display: inline-block">
+                                        <form th:action="@{'/shopping-cart/add-car/{id}' (id=${auto.getId()})}"
+                                              th:method="POST"
+                                              sec:authorize="hasRole('ROLE_USER')">
+                                            <button type="submit"
+                                                    class="btn btn-sm btn-primary cart-product">
+                                                <i class="fa fa-trash">Add to cart</i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <div th:if="${totalPages > 1}">
+                        <div class="row col-sm-10">
+                            <div class="col-sm-1">
+                                <a th:if="${currentPage > 1}" th:href="@{'/automobiles/page/' + ${currentPage - 1}}">Prev</a>
+                                <span th:unless="${currentPage > 1}">Prev</span>
+                            </div>
+                            <div class="col-sm-1">
+					<span th:each="i: ${#numbers.sequence(1, totalPages)}">
+						<a th:if="${currentPage != i}" th:href="@{'/automobiles/page/' + ${i}}">[[${i}]]</a>
+						<span th:unless="${currentPage != i}">[[${i}]]</span>  &nbsp; &nbsp;
+					</span>
+                            </div>
+                            <div class="col-sm-1">
+                                <a th:if="${currentPage < totalPages}" th:href="@{'/automobiles/page/' + ${currentPage + 1}}">
+                                    Next</a>
+                                <span th:unless="${currentPage < totalPages}">Next</span>
+                            </div>
+
+                            <div class="col-sm-1">
+                                <a th:if="${currentPage < totalPages}" th:href="@{'/automobiles/page/' + ${totalPages}}">
+                                    Last</a>
+                                <span th:unless="${currentPage < totalPages}">Last</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col mb-3" sec:authorize="hasRole('ROLE_ADMIN')">
+                <div class="row">
+                    <a href="/automobiles/add-car" class="btn btn-block btn-success add-product-btn">
+                        Add new car
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</th:block>

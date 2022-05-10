@@ -1,0 +1,47 @@
+<th:block xmlns:th="http://www.thymeleaf.org">
+    <section class="jumbotron text-center">
+        <div class="container">
+            <h1 class="jumbotron-heading">WEB PROGRAMMING SHOP</h1>
+        </div>
+    </section>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-5">
+                <form action="/brands/add" method="POST">
+                    <input id="id" type="hidden" name="id" th:value="(${brand} != null ? ${brand.getId()} : '')">
+                    <div class="form-group">
+                        <label for="name">Brand name</label>
+                        <input type="text"
+                               class="form-control"
+                               id="name"
+                               name="name"
+                               th:value="(${brand} != null ? ${brand.getName()} : '')"
+                               required
+                               placeholder="Enter brand name">
+                    </div>
+                    <div class="form-group">
+                        <label for="country">Country of origin</label>
+                        <input type="text"
+                               class="form-control"
+                               id="country"
+                               name="country"
+                               th:value="(${brand} != null ? ${brand.getCountry()} : '')"
+                               placeholder="Location">
+                    </div>
+                    <div class="form-group">
+                        <label for="imageUrl">Image URL</label>
+                        <input type="text"
+                               class="form-control"
+                               id="imageUrl"
+                               name="imageUrl"
+                               th:value="(${brand} != null ? ${brand.getImageUrl()} : '')"
+                               placeholder="Image URL">
+                    </div>
+                    <button id="submit" type="submit" class="btn btn-primary">Submit</button>
+                    <a type="button" class="btn btn-primary" href="/brands">Back</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</th:block>
